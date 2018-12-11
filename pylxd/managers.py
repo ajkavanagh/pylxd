@@ -4,6 +4,8 @@ import functools
 import importlib
 import inspect
 
+from pylxd import managers
+
 
 class BaseManager(object):
     """A BaseManager class for handling collection operations."""
@@ -27,16 +29,28 @@ class BaseManager(object):
         return super(BaseManager, self).__init__()
 
 
-class ClusterMemberManager(BaseManager):
-    manager_for = 'pylxd.models.ClusterMember'
-
-
 class CertificateManager(BaseManager):
     manager_for = 'pylxd.models.Certificate'
 
 
 class ContainerManager(BaseManager):
     manager_for = 'pylxd.models.Container'
+
+
+class ClusterManager(BaseManager):
+    manager_for = 'pylxd.models.Cluster'
+
+    def __init__(self, client, *args, **kwargs):
+        super(ClusterManager, self).__init__(client, *args, **kwargs)
+        self._client = client
+        self._members = managers.ClusterMemberManager(client)
+
+    @property
+    def members(self):
+        return self._members
+
+class ClusterMemberManager(BaseManager):
+    manager_for = 'pylxd.models.ClusterMember'
 
 
 class ImageManager(BaseManager):

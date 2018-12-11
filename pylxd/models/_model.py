@@ -153,6 +153,7 @@ class Model(object):
         # on existing attributes.
         response = self.api.get()
         payload = response.json()['metadata']
+        print(payload)
         for key, val in payload.items():
             if key not in self.__dirty__ or rollback:
                 try:
